@@ -7,6 +7,8 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+A lightweight WooCommerce plugin to automatically complete orders and bypass processing email notifications.
+
 == Description ==
 A WooCommerce-based plugin that allows users to auto-complete orders without processing them and removes the processing email notification.
 

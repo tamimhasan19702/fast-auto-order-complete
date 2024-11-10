@@ -24,7 +24,7 @@ class Fast_Auto_Order_Complete {
     }
 
     /**
-     * Add the checkbox to the product data panel.
+     * Add the checkbox and nonce field to the product data panel.
      */
     public function add_auto_complete_checkbox() {
         woocommerce_wp_checkbox( array(
@@ -32,14 +32,24 @@ class Fast_Auto_Order_Complete {
             'label'         => __( 'Enable Auto Complete', 'fast-auto-order-complete' ),
             'description'   => __( 'Enable this option to auto-complete the order when it is placed.', 'fast-auto-order-complete' ),
         ));
+
+        // Add a nonce field for security
+        wp_nonce_field( 'save_auto_complete_checkbox_nonce_action', 'save_auto_complete_checkbox_nonce' );
     }
 
     /**
-     * Save the checkbox value when the product is saved.
+     * Save the checkbox value when the product is saved, with nonce verification.
      *
      * @param int $post_id The ID of the product.
      */
     public function save_auto_complete_checkbox( $post_id ) {
+        // Verify the nonce before proceeding
+        if ( ! isset( $_POST['save_auto_complete_checkbox_nonce'] ) || 
+             ! wp_verify_nonce( $_POST['save_auto_complete_checkbox_nonce'], 'save_auto_complete_checkbox_nonce_action' ) ) {
+            return; // Exit if nonce verification fails
+        }
+
+        // Save the checkbox value
         $checkbox_value = isset( $_POST['fast_auto_order_complete_checkbox'] ) ? 'yes' : 'no';
         update_post_meta( $post_id, 'fast_auto_order_complete_checkbox', $checkbox_value );
     }
