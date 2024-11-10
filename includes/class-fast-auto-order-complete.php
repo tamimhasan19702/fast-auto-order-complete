@@ -43,17 +43,20 @@ class Fast_Auto_Order_Complete {
      * @param int $post_id The ID of the product.
      */
     public function save_auto_complete_checkbox( $post_id ) {
-        // Verify the nonce before proceeding
-        if ( ! isset( $_POST['save_auto_complete_checkbox_nonce'] ) || 
-             ! wp_verify_nonce( $_POST['save_auto_complete_checkbox_nonce'], 'save_auto_complete_checkbox_nonce_action' ) ) {
-            return; // Exit if nonce verification fails
+        // Check if the nonce is set
+        if ( isset( $_POST['save_auto_complete_checkbox_nonce'] ) ) {
+            // Unsalsh and sanitize the nonce
+            $nonce = sanitize_text_field( wp_unslash( $_POST['save_auto_complete_checkbox_nonce'] ) );
+    
+            // Verify the nonce before proceeding
+            if ( wp_verify_nonce( $nonce, 'save_checkbox_nonce_action' ) ) {
+                // Process the checkbox value
+                $checkbox_value = isset( $_POST['fast_auto_order_complete_checkbox'] ) ? 'yes' : 'no';
+                update_post_meta( $post_id, 'fast_auto_order_complete_checkbox', $checkbox_value );
+            }
         }
-
-        // Save the checkbox value
-        $checkbox_value = isset( $_POST['fast_auto_order_complete_checkbox'] ) ? 'yes' : 'no';
-        update_post_meta( $post_id, 'fast_auto_order_complete_checkbox', $checkbox_value );
     }
-
+    
     /**
      * Auto-completes an order if the checkbox is selected for any product in the order.
      *
