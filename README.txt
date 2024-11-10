@@ -3,7 +3,7 @@ Contributors: tamimh
 Tags: woocommerce, auto-complete, order-processing
 Requires at least: 3.0.1
 Tested up to: 6.6
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,14 +35,14 @@ You can configure the plugin settings by going to the WooCommerce settings page 
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.1 =
 * Initial release of the plugin
 * Added functionality to auto-complete orders without processing them
 * Removed processing email notification
 
 == Upgrade Notice ==
 
-= 1.0.0 =
+= 1.0.1 =
 Upgrade to the latest version of the plugin to take advantage of the new features and improvements.
 
 == Arbitrary section ==
