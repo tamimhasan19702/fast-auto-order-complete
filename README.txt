@@ -2,8 +2,8 @@
 Contributors: tamimh
 Tags: woocommerce, auto-complete, order-processing
 Requires at least: 3.0.1
-Tested up to: 6.6
-Stable tag: 1.0.1
+Tested up to: 6.7
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,26 +14,37 @@ A WooCommerce-based plugin that allows users to auto-complete orders without pro
 
 == Installation ==
 
-1. Upload `fast-auto-order-complete.php` to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the plugin settings as needed
+1. Upload `fast-auto-order-complete.php` to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Configure the plugin settings as needed.
+
+== Configuration ==
+
+To enable the auto-complete feature for each individual product:
+
+1. Go to **Products > All Products** in WooCommerce.
+2. For each product, click **Edit**.
+3. In the product edit page, navigate to the **General** tab.
+4. Check the "Auto Complete" checkbox to enable automatic order completion for that product.
+
+> *Note:* Each product requires this checkbox to be selected individually to activate the auto-complete feature. This is the only functionality offered by the plugin; there are no additional settings pages or configuration options.
 
 == Frequently Asked Questions ==
 
 = What is the purpose of this plugin? =
+This plugin allows users to auto-complete orders without processing them and removes the processing email notification.
 
-This plugin allows users to auto-complete orders without processing them, and removes the processing email notification.
-
-= How do I configure the plugin? =
-
-You can configure the plugin settings by going to the WooCommerce settings page and clicking on the "Auto Complete" tab.
+= How do I enable the auto-complete feature for each product? =
+To enable auto-complete for a product, go to **Products > All Products**, edit the product, go to the **General** tab, and check the "Auto Complete" checkbox.
 
 == Screenshots ==
 
-1. Screenshot of the plugin settings page
-2. Screenshot of the auto-complete checkbox on the order page
+1. Screenshot of the auto-complete checkbox on the product page
 
 == Changelog ==
+
+= 1.0.2 =
+* Updated documentation to clarify configuration steps for enabling auto-complete on individual products.
 
 = 1.0.1 =
 * Initial release of the plugin
@@ -42,18 +53,22 @@ You can configure the plugin settings by going to the WooCommerce settings page 
 
 == Upgrade Notice ==
 
+= 1.0.2 =
+Added clarification on product-level configuration for auto-complete functionality.
+
 = 1.0.1 =
-Upgrade to the latest version of the plugin to take advantage of the new features and improvements.
+Initial release of the plugin.
 
 == Arbitrary section ==
 
-This plugin uses the following hooks and filters to modify the WooCommerce behavior:
+This plugin uses the following hooks and filters to modify WooCommerce behavior:
 
-* `woocommerce_order_status_changed`
-* `woocommerce_new_order`
+* `woocommerce_product_options_general_product_data`
+* `woocommerce_process_product_meta`
 * `woocommerce_order_status_pending_to_processing_notification`
+* `woocommerce_new_order`
 
-You can use these hooks and filters to customize the plugin behavior to suit your needs.
+These hooks and filters can be customized if needed.
 
 == A brief Markdown Example ==
 
@@ -61,7 +76,7 @@ Ordered list:
 
 1. Auto-complete orders without processing them
 2. Remove processing email notification
-3. Configure plugin settings as needed
+3. Enable auto-complete per product using a checkbox in the General tab
 
 Unordered list:
 
@@ -72,6 +87,6 @@ Unordered list:
 Here's a link to [WooCommerce](https://woocommerce.com/ "Your favorite e-commerce plugin") and one to [WordPress](http://wordpress.org/ "Your favorite software").
 
 Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
+> Asterisks for *emphasis*. Double it up for **strong**.
 
 `<?php code(); // goes in backticks ?>`

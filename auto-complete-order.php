@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Fast Auto Order Complete
  * Description:       A WooCommerce-based plugin that allows users to auto-complete orders without processing them and removes the processing email notification.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Tareq Monower
  * Author URI:        https://profiles.wordpress.org/tamimh/
  * License:           GPL-2.0+
