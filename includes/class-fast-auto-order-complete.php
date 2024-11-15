@@ -13,57 +13,66 @@ class Fast_Auto_Order_Complete
      */
     public function init_hooks()
     {
-        // Add an action hook to the 'woocommerce_product_options_general_product_data' event
+        // Add the checkbox to the product data panel
         add_action('woocommerce_product_options_general_product_data', array($this, 'add_auto_complete_checkbox'));
 
-        // Add an action hook to the 'woocommerce_process_product_meta' event
+        // Save the checkbox value when the product is saved
         add_action('woocommerce_process_product_meta', array($this, 'save_auto_complete_checkbox'));
 
-        // Remove the processing email notification when the order status changes from pending to processing
-        remove_action('woocommerce_order_status_pending_to_processing_notification', 'WC_Email_New_Order::trigger', 10, 2);
+        // Remove the processing email notification
+        add_action('woocommerce_email', array($this, 'remove_processing_email_notification'));
 
-        // Add an action hook to the 'woocommerce_new_order' event
-        add_action('woocommerce_new_order', array($this, 'auto_complete_order_if_checkbox_selected'), 10, 1);
+        // Auto-complete order if the checkbox is selected for any product in the order
+        add_action('woocommerce_order_status_pending', array($this, 'auto_complete_order_if_checkbox_selected'), 10, 1);
     }
 
     /**
-     * Add the checkbox and nonce field to the product data panel.
+     * Add the checkbox to the product data panel.
      */
     public function add_auto_complete_checkbox()
     {
+        global $post;
+
+        // Get the current checkbox value
+        $value = get_post_meta($post->ID, 'fast_auto_order_complete_checkbox', true);
+
         woocommerce_wp_checkbox(array(
             'id' => 'fast_auto_order_complete_checkbox',
             'label' => __('Enable Auto Complete', 'fast-auto-order-complete'),
             'description' => __('Enable this option to auto-complete the order when it is placed.', 'fast-auto-order-complete'),
+            'value' => $value === 'yes' ? 'yes' : 'no', // Prepopulate the checkbox
         ));
-
-        // Add a nonce field for security
-        wp_nonce_field('save_auto_complete_checkbox_nonce_action', 'save_auto_complete_checkbox_nonce');
     }
 
     /**
-     * Save the checkbox value when the product is saved, with nonce verification.
+     * Save the checkbox value when the product is saved.
      *
      * @param int $post_id The ID of the product.
      */
     public function save_auto_complete_checkbox($post_id)
     {
-        // Check if the nonce is set
-        if (isset($_POST['save_auto_complete_checkbox_nonce'])) {
-            // Unsalsh and sanitize the nonce
-            $nonce = sanitize_text_field(wp_unslash($_POST['save_auto_complete_checkbox_nonce']));
-
-            // Verify the nonce before proceeding
-            if (wp_verify_nonce($nonce, 'save_checkbox_nonce_action')) {
-                // Process the checkbox value
-                $checkbox_value = isset($_POST['fast_auto_order_complete_checkbox']) ? 'yes' : 'no';
-                update_post_meta($post_id, 'fast_auto_order_complete_checkbox', $checkbox_value);
-            }
+        // Verify the nonce
+        if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data')) {
+            return;
         }
+
+        // Save the checkbox value
+        $checkbox_value = isset($_POST['fast_auto_order_complete_checkbox']) ? 'yes' : 'no';
+        update_post_meta($post_id, 'fast_auto_order_complete_checkbox', $checkbox_value);
     }
 
     /**
-     * Auto-completes an order if the checkbox is selected for any product in the order.
+     * Remove the processing email notification.
+     *
+     * @param WC_Email $email_class WooCommerce email class instance.
+     */
+    public function remove_processing_email_notification($email_class)
+    {
+        remove_action('woocommerce_order_status_pending_to_processing_notification', array($email_class, 'trigger'));
+    }
+
+    /**
+     * Auto-complete an order if the checkbox is selected for any product in the order.
      *
      * @param int $order_id The ID of the order.
      */
@@ -72,6 +81,11 @@ class Fast_Auto_Order_Complete
         // Get the order object using the order ID
         $order = wc_get_order($order_id);
 
+        // Check if the order exists
+        if (!$order) {
+            return;
+        }
+
         // Loop through the order items
         foreach ($order->get_items() as $item_id => $item) {
             $product_id = $item->get_product_id();
@@ -79,9 +93,9 @@ class Fast_Auto_Order_Complete
 
             // Check if the checkbox is selected for the product
             if ('yes' === $checkbox_value) {
-                // Update the order status to 'completed' if the checkbox is selected
-                $order->update_status('completed', 'Order auto-completed by Fast Auto Order Complete plugin.');
-                break; // Exit loop after completing the order
+                // Update the order status to 'completed'
+                $order->update_status('completed', __('Order auto-completed by Fast Auto Order Complete plugin.', 'fast-auto-order-complete'));
+                return; // Exit after completing the order
             }
         }
     }

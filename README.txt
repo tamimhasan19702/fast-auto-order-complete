@@ -3,7 +3,7 @@ Contributors: tamimh
 Tags: woocommerce, auto-complete, order-processing
 Requires at least: 3.0.1
 Tested up to: 6.7
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,9 @@ To enable auto-complete for a product, go to **Products > All Products**, edit t
 
 == Changelog ==
 
+= 1.0.3 =
+* Fixed the woocommerce functionality issues so that the plugin works successfully
+
 = 1.0.2 =
 * Updated documentation to clarify configuration steps for enabling auto-complete on individual products.
 
@@ -52,6 +55,9 @@ To enable auto-complete for a product, go to **Products > All Products**, edit t
 * Removed processing email notification
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Fixed minor bugs
 
 = 1.0.2 =
 Added clarification on product-level configuration for auto-complete functionality.
